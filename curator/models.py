@@ -5,7 +5,6 @@ import random
 import string
 import logging
 
-
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
         """
@@ -90,22 +89,11 @@ class Student(models.Model):
 
 class Event(models.Model):
     title = models.CharField(max_length=255, blank=False)
-    type = models.CharField(max_length=255, blank=True)
-    date = models.DateField(blank=True)
-    start_time = models.TimeField(blank=True)
-    end_time = models.TimeField(blank=True)
-    location = models.CharField(max_length=255, blank=True)
-    cloud_url = models.CharField(max_length=255, blank=True)
-    groups = models.ManyToManyField(Group, related_name="events", blank=True)
+    type = models.CharField(max_length=255, default=None, blank=True, null=True)
+    date = models.DateField(default=None, blank=True, null=True)
+    start_time = models.TimeField(default=None, blank=True, null=True)
+    end_time = models.TimeField(default=None, blank=True, null=True)
+    location = models.CharField(max_length=255, default=None, blank=True, null=True)
+    cloud_url = models.CharField(max_length=255, default=None, blank=True, null=True)
+    groups = models.ManyToManyField(Group, related_name="events", blank=False)
     present_students = models.ManyToManyField(Student, related_name="present_events", blank=True)
-
-
-class EmailConfirmationCode(models.Model):
-    code = models.charField(max_length=4, blank=False)
-    timestamp = models.DateTimeField(auto_now=True, db_index=True)
-    email = models.EmailField(max_length=255, unique=True, blank=False)
-
-    @staticmethod
-    def sendCode(email: str):
-        code = EmailConfirmationCode(code=f"{random.randint(0, 9999):04}", email=email)
-        code.save()

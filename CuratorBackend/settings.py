@@ -21,13 +21,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', "123")
+
+# MAILING SETTINGS
+MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+MAIL_SERVER = os.environ.get('MAIL_SERVER')
+MAIL_PORT = int(os.environ.get('MAIL_PORT', 0))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get('IS_DEBUG'))
 
-ALLOWED_HOSTS = list(os.environ.get('ALLOWED_HOSTS').split(',')) if os.environ.get('ALLOWED_HOSTS') else list()
-
+ALLOWED_HOSTS = list(os.environ.get('ALLOWED_HOSTS', '').split(','))
 
 # Application definition
 
@@ -143,8 +148,8 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'curator.User'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1000),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=3000),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': False,
