@@ -1,9 +1,11 @@
-from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
-from django.db import models
-from django.contrib.auth.models import AbstractUser
+import logging
 import random
 import string
-import logging
+
+from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -51,6 +53,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
     # REQUIRED_FIELDS = []
 
     def __str__(self):
@@ -97,3 +100,10 @@ class Event(models.Model):
     cloud_url = models.CharField(max_length=255, default=None, blank=True, null=True)
     groups = models.ManyToManyField(Group, related_name="events", blank=False)
     present_students = models.ManyToManyField(Student, related_name="present_events", blank=True)
+
+
+class Request(models.Model):
+    title = models.CharField(max_length=255, blank=False)
+    description = models.CharField(max_length=255, blank=False)
+    status = models.CharField(max_length=255, default=None, blank=True, null=True)
+    user = models.ForeignKey(User, related_name="requests", on_delete=models.CASCADE, blank=False)

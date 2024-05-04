@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from curator.models import User, Event, Group, Student
+from curator.models import User, Event, Group, Student, Request
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,3 +28,9 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = ['id', 'title', 'type', 'date', 'start_time', 'end_time', 'location', 'cloud_url', 'groups',
                   'present_students']
+
+
+class RequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Request
+        fields = ['id', 'title', 'description', 'status']
