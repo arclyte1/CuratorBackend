@@ -56,7 +56,7 @@ class GroupView(APIView):
 
 class EventView(APIView):
     def get(self, request):
-        data = EventSerializer(Event.objects.filter(groups__curators=request.user), many=True).data
+        data = EventSerializer(Event.objects.filter(groups__curators=request.user).distinct(), many=True).data
         return Response(data=data)
 
     def post(self, request):
