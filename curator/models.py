@@ -105,5 +105,5 @@ class Event(models.Model):
 class Request(models.Model):
     title = models.CharField(max_length=255, blank=False)
     description = models.CharField(max_length=255, blank=False)
-    status = models.CharField(max_length=255, default=None, blank=True, null=True)
+    status = models.CharField(max_length=255, default=None, blank=False)
     user = models.ForeignKey(User, related_name="requests", on_delete=models.CASCADE, blank=False)

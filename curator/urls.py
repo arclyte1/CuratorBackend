@@ -15,4 +15,5 @@ urlpatterns = [
     path('events', views.EventView.as_view()),
     path('events/<int:event_id>', views.EventDetailsView.as_view()),
     path('groups', views.GroupView.as_view()),
+    path('requests', views.RequestsView.as_view()),
 ]

@@ -1,12 +1,16 @@
 import random
 import smtplib
 from email.mime.text import MIMEText
+import os
 
 import redis
 
 from CuratorBackend.settings import MAIL_SERVER, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD
 
-r = redis.StrictRedis()
+r = redis.StrictRedis(
+    host=os.environ.get("REDIS_HOST"),
+    port=int(os.environ.get("REDIS_PORT"))
+)
 
 
 def __can_send_code(email: str) -> bool:

@@ -5,8 +5,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
 from curator.email_confirmation import send_code, verify_code
-from curator.models import User, Event, Group
-from curator.serializers import UserSerializer, EventSerializer, GroupSerializer
+from curator.models import User, Event, Group, Request
+from curator.serializers import UserSerializer, EventSerializer, GroupSerializer, RequestSerializer
 
 
 class UserSendCodeView(APIView):
@@ -137,3 +137,31 @@ class EventDetailsView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         event_query.delete()
         return Response()
+
+class RequestsView(APIView):
+    def get(self, request):
+        try:
+            data = RequestSerializer(request.user.requests, many=True).data
+            return Response(data=data)
+        except Exception as e:
+            return Response(data={'error': type(e).__name__, 'message': str(e)},
+                            status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request):
+        if ('title' not in request.data or 'description' not in request.data or
+            'status' not in request.data):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            request_data = {
+                'title': request.data['title'],
+                'description': request.data['description'],
+                'status': request.data['status'],
+                'user': request.user
+            }
+            request_entity = Request.objects.create(**request_data)
+            data = RequestSerializer(request_entity).data
+            return Response(data=data)
+        except Exception as e:
+            return Response(data={'error': type(e).__name__, 'message': str(e)},
+                            status=status.HTTP_400_BAD_REQUEST)
