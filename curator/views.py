@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
 from curator.email_confirmation import send_code, verify_code
-from curator.models import User, Event, Group, Request
+from curator.models import User, Event, Group, Request, Student
 from curator.serializers import UserSerializer, EventSerializer, GroupSerializer, RequestSerializer
 
 
@@ -125,6 +125,8 @@ class EventDetailsView(APIView):
             event_query.update(**event_data)
             event = event_query.get()
             event.groups.set(Group.objects.filter(id__in=request.data['groups']))
+            if 'present_students' in request.data:
+                event.present_students.set(Student.objects.filter(id__in=request.data['present_students']))
             data = EventSerializer(event).data
             return Response(data=data)
         except Exception as e:
